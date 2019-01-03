@@ -7,13 +7,15 @@ RUN apk add --no-cache \
     xvfb
 
 RUN pip install --no-cache-dir \
-  robotframework==3.0.2 \
-  robotframework-selenium2library==1.8.0 \
-  selenium==3.3.1
+  robotframework \
+  robotframework-selenium2library \
+  selenium
 
 # Chrome requires docker to have cap_add: SYS_ADMIN if sandbox is on.
 # Disabling sandbox and gpu as default.
+# RUN cat /usr/local/lib/python2.7/site-packages/selenium/webdriver/chrome/options.py | grep -o "self._arguments\ ="
 RUN sed -i "s/self._arguments\ =\ \[\]/self._arguments\ =\ \['--no-sandbox',\ '--disable-gpu'\]/" /usr/local/lib/python2.7/site-packages/selenium/webdriver/chrome/options.py
+# RUN cat /usr/local/lib/python2.7/site-packages/selenium/webdriver/chrome/options.py | grep -o "self._arguments\ ="
 
 COPY entry_point.sh /opt/bin/entry_point.sh
 RUN chmod +x /opt/bin/entry_point.sh

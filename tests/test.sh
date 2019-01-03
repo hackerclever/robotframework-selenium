@@ -2,13 +2,14 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
+echo "dir" 
+echo $DIR
 
 export image=""
 export version=""
 
 browsers=(
     "chrome"
-    "firefox"
 )
 
 docker-compose up -d demoapp

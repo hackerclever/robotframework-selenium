@@ -10,18 +10,37 @@ Library           Selenium2Library
 ${SELENIUM}          http://localhost:4444/wd/hub
 ${APPLICATION}       http://demoapp:7272
 ${BROWSER}           %{BROWSER}
+${BCH}               Chrome
 ${DELAY}             0
 ${VALID USER}        demo
 ${VALID PASSWORD}    mode
 ${LOGIN URL}         ${APPLICATION}/
 ${WELCOME URL}       ${APPLICATION}/welcome.html
 ${ERROR URL}         ${APPLICATION}/error.html
+@{chrome_arguments_full}    --disable-infobars    --headless    --disable-gpu    --no-sandbox
+@{chrome_arguments}    --disable-gpu    --no-sandbox
 
 
 *** Keywords ***
+# Teardown Selenium
+# Run Keyword If Test Failed Log Screenshot
+
+Set Chrome Options
+    [Documentation]    Set Chrome options for headless mode
+    ${options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
+    : FOR    ${option}    IN    @{chrome_arguments}
+    \    Call Method    ${options}    add_argument    ${option}
+    [Return]    ${options}
+
 Open Browser To Login Page
-    Open Browser    ${LOGIN URL}    browser=${BROWSER}
-    Maximize Browser Window
+    # Open Browser    ${LOGIN URL}    browser=${BROWSER}
+    # Maximize Browser Window
+
+    # ${chrome_options}=    Set Chrome Options
+    # Create Webdriver    Chrome    chrome_options=${chrome_options}
+    # Go To    ${LOGIN URL}
+    Open Browser    ${LOGIN URL}    browser=${BCH}
+    
     Set Selenium Speed    ${DELAY}
     Login Page Should Be Open
 
@@ -35,6 +54,7 @@ Go To Login Page
 Input Username
     [Arguments]    ${username}
     Input Text    username_field    ${username}
+    # Capture Page Screenshot
 
 Input Password
     [Arguments]    ${password}
